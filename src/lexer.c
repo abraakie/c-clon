@@ -51,7 +51,9 @@ int next_token(LxrContext *ctx, Token * token, Error * error) {
             *token = (Token) {TOK_EOF, start, 0};
             return SUCCESS;
         }
-        default: ;
+        default: {
+            break;
+        }
     }
     if (c == '-' || c == '+' || isdigit(c)) {
         do {

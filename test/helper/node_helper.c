@@ -10,8 +10,8 @@ const char * number_type_to_string(const NumberType type) {
     switch (type) {
         case NUMBER_INT: return "NUMBER_INT";
         case NUMBER_FLOAT: return "NUMBER_FLOAT";
+        default: return "UNKNOWN";
     }
-    return "UNKNOWN";
 }
 
 int array_entries_equals(ArrayEntry * a, ArrayEntry * b) {
@@ -62,6 +62,9 @@ int node_equals(const Node * a, const Node * b) {
         case NODE_OBJECT: {
             return object_entries_equals(a->object_entries, b->object_entries);
         }
+        default: {
+            return 0;
+        }
     }
 }
 
@@ -98,7 +101,7 @@ size_t node_write(const Node *node, char *buffer, const size_t buffer_size) {
     switch (node->type) {
         case NODE_NUMBER:
             if (node->number_value.type == NUMBER_INT) {
-                written += snprintf(buffer + written, buffer_size - written, "%lld", node->number_value.i);
+                written += snprintf(buffer + written, buffer_size - written, "%ld", node->number_value.i);
             } else {
                 written += snprintf(buffer + written, buffer_size - written, "%g", node->number_value.f);
             }
@@ -121,6 +124,8 @@ size_t node_write(const Node *node, char *buffer, const size_t buffer_size) {
             written += snprintf(buffer + written, buffer_size - written, "{");
             written += object_entries_write(node->object_entries, buffer + written, buffer_size - written);
             written += snprintf(buffer + written, buffer_size - written, "}");
+            break;
+        default:
             break;
     }
     return written;

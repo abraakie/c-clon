@@ -89,7 +89,7 @@
 }
 
 #define PRINT_NUMBER(prefix, num) if (num.type == NUMBER_INT) { \
-    printf("%s: type=INT, i=%lld\n", prefix, num.i); \
+    printf("%s: type=INT, i=%ld\n", prefix, num.i); \
 } \
 else { \
     printf("%s: type=FLOAT, i=%g\n", prefix, num.f); \

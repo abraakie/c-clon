@@ -345,23 +345,3 @@ int parse_value(LxrContext * ctx, Token * token, Node ** res, Error * error) {
     }
     return SUCCESS;
 }
-
-int parse_arg(const char * clon, Error * error) {
-    LxrContext ctx = (LxrContext) {clon, 0};
-    Token token;
-    TRY(next_token(&ctx, &token, error));
-    if (token.type == TOK_EOF) {
-        return SUCCESS;
-    }
-    Node * res = make_node(NODE_ARRAY);
-    TRY(parse_first_array_or_object_entry(&ctx, &token, res, error));
-    if (token.type != TOK_EOF) {
-        make_error(error, ctx.input, token.start, token.length, 0, "Invalid argument: Expected end of input");
-        return ERROR;
-    }
-    return SUCCESS;
-}
-
-int parse_n_args(const char ** clon, size_t len, Error * error, size_t err_n) {
-
-}
