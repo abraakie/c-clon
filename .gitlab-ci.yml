@@ -31,6 +31,8 @@ lint:
     reports:
       codequality: cppcheck-result.xml
     expire_in: 1 week
+    paths:
+      - cppcheck-result.xml
   allow_failure: true
 
 build:
@@ -64,4 +66,4 @@ test:
     paths:
       - build/coverage.xml
       - build/test_results.xml
-    expire_in: 30 days
+    expire_in: 1 week
