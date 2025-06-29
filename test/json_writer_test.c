@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#include "json_writer.h"
+#include "clon_json_writer.h"
 #include "unity.h"
 #include "helper/node_helper.h"
 
@@ -12,8 +12,7 @@
     Node * in = input; \
     char buf[512] = {0}; \
     Context context = make_json_writer_context(buf, sizeof(buf)); \
-    Writer writer = make_writer(&JSON_WRITER_IMPL, &context); \
-    write_ast(&writer, in); \
+    JSON_WRITER_IMPL(&context, in); \
     free_node(in); \
     TEST_ASSERT_EQUAL_STRING(exp, buf); \
 } while (0)
@@ -21,9 +20,8 @@
 #define TEST_JSON_PRETTY_WRITING(exp, input, indent) do { \
     Node * in = input; \
     char buf[512] = {0}; \
-    Context context = make_pretty_json_writer_context_with_indent(buf, sizeof(buf), indent); \
-    Writer writer = make_writer(&JSON_WRITER_IMPL, &context); \
-    write_ast(&writer, in); \
+    Context context = make_pretty_indent_json_writer_context(buf, sizeof(buf), indent); \
+    JSON_WRITER_IMPL(&context, in); \
     free_node(in); \
     TEST_ASSERT_EQUAL_STRING(exp, buf); \
 } while (0)
@@ -44,6 +42,17 @@ void test_simple_json_value_writing() {
     TEST_JSON_WRITING("{}", MAKE_NODE_OBJECT());
 }
 
+void test_string_special_character_parsing() {
+    TEST_JSON_WRITING("\"\\\"\"", MAKE_NODE_STRING("\""));
+    TEST_JSON_WRITING("\"\\\\\"", MAKE_NODE_STRING("\\"));
+    TEST_JSON_WRITING("\"\\/\"", MAKE_NODE_STRING("/"));
+    TEST_JSON_WRITING("\"\\\b\"", MAKE_NODE_STRING("\b"));
+    TEST_JSON_WRITING("\"\\\f\"", MAKE_NODE_STRING("\f"));
+    TEST_JSON_WRITING("\"\\\n\"", MAKE_NODE_STRING("\n"));
+    TEST_JSON_WRITING("\"\\\r\"", MAKE_NODE_STRING("\r"));
+    TEST_JSON_WRITING("\"\\\t\"", MAKE_NODE_STRING("\t"));
+}
+
 void test_object_json_writing() {
     TEST_JSON_WRITING("{\"key\":\"value\"}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_STRING("value"))));
     TEST_JSON_WRITING("{\"key\":\"value\",\"key2\":\"value2\"}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_STRING("value")), MAKE_OBJECT_ENTRY("key2", MAKE_NODE_STRING("value2"))));
@@ -57,6 +66,8 @@ void test_array_json_writing() {
 }
 
 void test_pretty_json_writing() {
+    TEST_JSON_PRETTY_WRITING("[ ]", MAKE_NODE_ARRAY(), 4);
+    TEST_JSON_PRETTY_WRITING("{ }", MAKE_NODE_OBJECT(), 4);
     TEST_JSON_PRETTY_WRITING(
         "[\n"
         "    \"a\"\n"
@@ -100,8 +111,10 @@ void test_pretty_json_writing() {
         "{\n"
         "    \"key\" : [\n"
         "        \"value\"\n"
-        "    ]\n"
-        "}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_ARRAY(MAKE_NODE_STRING("value")))), 4);
+        "    ],\n"
+        "    \"key2\" : { },\n"
+        "    \"key3\" : [ ]\n"
+        "}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_ARRAY(MAKE_NODE_STRING("value"))), MAKE_OBJECT_ENTRY("key2", MAKE_NODE_OBJECT()), MAKE_OBJECT_ENTRY("key3", MAKE_NODE_ARRAY())), 4);
     TEST_JSON_PRETTY_WRITING(
         "{\n"
         "    \"key\" : {\n"
@@ -113,6 +126,7 @@ void test_pretty_json_writing() {
 int main() {
     UNITY_BEGIN();
     RUN_TEST(test_simple_json_value_writing);
+    RUN_TEST(test_string_special_character_parsing);
     RUN_TEST(test_object_json_writing);
     RUN_TEST(test_array_json_writing);
     RUN_TEST(test_pretty_json_writing);

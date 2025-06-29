@@ -1,4 +1,4 @@
-#include "library.h"
+#include "clon.h"
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -6,7 +6,7 @@
 #include "lexer.h"
 #include "parser.h"
 
-int parse_arg(const char * arg, const WriterImpl * writer_impl, void * writer_context) {
+int parse_arg(const char * arg, const WriterImplementation writer_impl, void * writer_context) {
     LxrContext ctx = {arg, 0};
     Token token;
     Error error;
@@ -17,13 +17,12 @@ int parse_arg(const char * arg, const WriterImpl * writer_impl, void * writer_co
     if (parse_value(&ctx, &token, &node, &error)) {
         return ERROR;
     }
-    Writer writer = {writer_context, writer_impl};
-    write_ast(&writer, node);
+    writer_impl(writer_context, node);
     free_node(node);
     return SUCCESS;
 }
 
-int parse_args(const char ** args, const size_t args_count, const WriterImpl * writer_impl, void * writer_context) {
+int parse_args(const char ** args, const size_t args_count, const WriterImplementation writer_impl, void * writer_context) {
     LxrContext ctx = {args[0], 0};
     Token token;
     Error error;
@@ -54,8 +53,7 @@ int parse_args(const char ** args, const size_t args_count, const WriterImpl * w
         free(node);
         node = tmp;
     }
-    Writer writer = {writer_context, writer_impl};
-    write_ast(&writer, node);
+    writer_impl(writer_context, node);
     free_node(node);
     return SUCCESS;
 }
