@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <secure/_string.h>
 
 Context make_json_writer_context(char* buffer, const size_t buffer_size) {
     return (Context) {
