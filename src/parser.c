@@ -147,33 +147,43 @@ int parse_string(LxrContext * ctx, Token * token, char ** res, Error * error) {
     return SUCCESS;
 }
 
-int parse_key_tail(LxrContext * ctx, Token * token, Node * res, ObjectEntry ** target, Error * error) {
+int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** target, Error * error) {
     const int brak = token->type == TOK_LBRACKET;
-    if (next_token(ctx, token, error)) {
-        return ERROR;
+    TRY(next_token(ctx, token, error));
+    if (token->type == TOK_RBRACKET) {
+        if (res->value == NULL) {
+            res->value = make_node(NODE_ARRAY);
+            CHECK_NOT_NULL(res->value);
+        } else if (res->value->type != NODE_ARRAY) {
+            THROW(0, "Invalid array entry: Can not override existing value");
+        }
+        ArrayEntry * array_entry = make_array_entry(NULL);
+        res->value->array_entries = append_array_entry_entry(res->value->array_entries, array_entry);
+        *target = &array_entry->value;
+        TRY(next_token(ctx, token, error));
+        return SUCCESS;
     }
     if (token->type != TOK_STRING) {
         THROW(0, "Invalid key: Expected string");
     }
+    if (res->value == NULL) {
+        res->value = make_node(NODE_OBJECT);
+        CHECK_NOT_NULL(res->value);
+    } else if (res->value->type != NODE_OBJECT) {
+        THROW(0, "Invalid object entry: Can not override existing value");
+    }
     char * key = NULL;
     TRY(parse_string(ctx, token, &key, error));
-    ObjectEntry * entry = object_entry_get_entry(res->object_entries, key);
-    if (!entry) {
+    ObjectEntry * entry = object_entry_get_entry(res->value->object_entries, key);
+    if (entry == NULL) {
         entry = make_object_entry(key, NULL);
         CHECK_NOT_NULL(entry);
-        res->object_entries = append_object_entry(res->object_entries, entry);
+        res->value->object_entries = append_object_entry(res->value->object_entries, entry);
     }
     if (token->type == TOK_DOT || token->type == TOK_LBRACKET) {
-        if (!entry->value) {
-            entry->value = make_node(NODE_OBJECT);
-            CHECK_NOT_NULL(entry->value);
-        }
-        if (entry->value->type != NODE_OBJECT) {
-            THROW(0, "Invalid object entry: Can not override existing value");
-        }
-        TRY(parse_key_tail(ctx, token, entry->value, target, error));
+        TRY(parse_key_tail(ctx, token, entry, target, error));
     } else {
-        *target = entry;
+        *target = &entry->value;
     }
     if (brak) {
         if (token->type != TOK_RBRACKET) {
@@ -200,26 +210,23 @@ int parse_object_entry(LxrContext * ctx, Token * token, ObjectEntry ** res, Erro
     if (token->type != TOK_LBRACKET && token->type != TOK_DOT && token->type != TOK_EQUAL) {
         THROW(0, "Invalid object entry: Expected key value pairs");
     }
-    ObjectEntry * target = object_entry_get_entry(*res, key);
-    if (target == NULL) {
-        target = make_object_entry(key, NULL);
-        CHECK_NOT_NULL(target);
-        *res = append_object_entry(*res, target);
+    ObjectEntry * entry = object_entry_get_entry(*res, key);
+    if (entry == NULL) {
+        entry = make_object_entry(key, NULL);
+        CHECK_NOT_NULL(entry);
+        *res = append_object_entry(*res, entry);
     }
+    Node ** target = &entry->value;
     if (token->type == TOK_LBRACKET || token->type == TOK_DOT) {
-        if (target->value == NULL) {
-            target->value = make_node(NODE_OBJECT);
-            CHECK_NOT_NULL(target->value);
-        }
-        TRY(parse_key_tail(ctx, token, target->value, &target, error));
+        TRY(parse_key_tail(ctx, token, entry, &target, error));
     }
     if (token->type != TOK_EQUAL) {
         THROW(0, "Invalid object entry: Expected '='");
     }
-    if (target->value != NULL) {
+    if (*target != NULL) {
         THROW(0, "Invalid object entry: Can not override existing value");
     }
-    return next_token(ctx, token, error) || parse_value(ctx, token, &target->value, error);
+    return next_token(ctx, token, error) || parse_value(ctx, token, target, error);
 }
 
 int parse_first_array_or_object_entry(LxrContext * ctx, Token * token, Node * res, Error * error) {
@@ -230,17 +237,19 @@ int parse_first_array_or_object_entry(LxrContext * ctx, Token * token, Node * re
             res->type = NODE_OBJECT;
             res->object_entries = make_object_entry(string, NULL);
             CHECK_NOT_NULL(res->object_entries);
-            ObjectEntry * target = res->object_entries;
+            ObjectEntry * entry = res->object_entries;
+            Node ** target = &entry->value;
             if (token->type == TOK_LBRACKET || token->type == TOK_DOT) {
-                target->value = make_node(NODE_OBJECT);
-                CHECK_NOT_NULL(target->value);
-                TRY(parse_key_tail(ctx, token, target->value, &target, error));
+                TRY(parse_key_tail(ctx, token, entry, &target, error));
             }
             if (token->type != TOK_EQUAL) {
                 THROW(0, "Invalid object entry: Expected '='");
             }
+            if (*target != NULL) {
+                THROW(0, "Invalid object entry: Can not override existing value");
+            }
             TRY(next_token(ctx, token, error));
-            TRY(parse_value(ctx, token, &target->value, error));
+            TRY(parse_value(ctx, token, target, error));
             return SUCCESS;
         }
         Node * value = make_node(NODE_STRING);

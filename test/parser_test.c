@@ -105,6 +105,19 @@
     ASSERT_EOF_TOKEN; \
 } while (0)
 
+#define TEST_VALUE_PARSING_ERROR(...) do { \
+    MAKE_MOCK_LEXER_INIT(__VA_ARGS__); \
+    Node * actual = NULL; \
+    if (!parse_value(ctx_ptr, &token, &actual, &error)) { \
+        free_node(actual); \
+        char act_msg[512]; \
+        node_write(actual, act_msg, sizeof(act_msg)); \
+        printf("Result: %s\n", act_msg); \
+        TEST_FAIL_MESSAGE("Parsing succeeded. Expected error."); \
+    } \
+    free_node(actual); \
+} while (0)
+
 void setUp(void) {
 }
 
@@ -141,6 +154,10 @@ void test_object_entry_parsing() {
             MAKE_OBJECT_ENTRY("key", MAKE_NODE_OBJECT(
                 MAKE_OBJECT_ENTRY("key", MAKE_NODE_NULL()))))),
         TOKEN_STRING("key"), TOKEN_DOT, TOKEN_STRING("key"), TOKEN_DOT, TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL);
+    TEST_OBJECT_ENTRY_PARSING(
+        MAKE_OBJECT_ENTRY("key", MAKE_NODE_ARRAY(
+            MAKE_NODE_NULL())),
+        TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NULL);
 }
 
 void test_array_entry_parsing() {
@@ -160,7 +177,12 @@ void test_array_or_object_parsing() {
                 MAKE_OBJECT_ENTRY(
                     "inner_two", MAKE_NODE_NULL()
                 )))),
-                TOKEN_LBRACKET, TOKEN_STRING("outer"), TOKEN_DOT, TOKEN_STRING("inner_one"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_COMMA, TOKEN_STRING("outer"), TOKEN_LBRACKET, TOKEN_STRING("inner_two"), TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NULL, TOKEN_RBRACKET);
+        TOKEN_LBRACKET, TOKEN_STRING("outer"), TOKEN_DOT, TOKEN_STRING("inner_one"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_COMMA, TOKEN_STRING("outer"), TOKEN_LBRACKET, TOKEN_STRING("inner_two"), TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NULL, TOKEN_RBRACKET);
+    TEST_ARRAY_OR_OBJECT_PARSING(MAKE_NODE_OBJECT(
+        MAKE_OBJECT_ENTRY(
+            "key", MAKE_NODE_ARRAY(
+                MAKE_NODE_NUMBER_I(1), MAKE_NODE_NUMBER_I(2)))),
+        TOKEN_LBRACKET, TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NUMBER("1"), TOKEN_COMMA, TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NUMBER("2"), TOKEN_RBRACKET);
 }
 
 void test_value_parsing() {
@@ -176,6 +198,10 @@ void test_value_parsing() {
     TEST_VALUE_PARSING(MAKE_NODE_ARRAY(MAKE_NODE_OBJECT()), TOKEN_LBRACKET, TOKEN_LBRACKET, TOKEN_EQUAL, TOKEN_RBRACKET, TOKEN_RBRACKET);
 }
 
+void test_value_parsing_error() {
+    TEST_VALUE_PARSING_ERROR(TOKEN_LBRACKET, TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_COMMA, TOKEN_STRING("key"), TOKEN_DOT, TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_RBRACKET);
+}
+
 int main() {
     UNITY_BEGIN();
     RUN_TEST(test_string_parsing);
@@ -184,5 +210,6 @@ int main() {
     RUN_TEST(test_array_entry_parsing);
     RUN_TEST(test_array_or_object_parsing);
     RUN_TEST(test_value_parsing);
+    RUN_TEST(test_value_parsing_error);
     return UNITY_END();
 }

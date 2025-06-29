@@ -57,6 +57,7 @@ void free_node(Node * node);
 Node * make_node(NodeType type);
 ArrayEntry * make_array_entry(Node * value);
 ArrayEntry * append_array_entry(ArrayEntry * array_entries, Node * value);
+ArrayEntry * append_array_entry_entry(ArrayEntry * array_entries, ArrayEntry * entry);
 ObjectEntry * make_object_entry(char * key, Node * value);
 ObjectEntry * append_object_entry(ObjectEntry * object_entries, ObjectEntry * entry);
 int object_entry_contains_key(const ObjectEntry * object_entries, const char * key);
