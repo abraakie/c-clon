@@ -31,6 +31,18 @@ ArrayEntry * append_array_entry(ArrayEntry * array_entries, Node * value) {
     return array_entries;
 }
 
+ArrayEntry * append_array_entry_entry(ArrayEntry * array_entries, ArrayEntry * entry) {
+    if (array_entries == NULL) {
+        return entry;
+    }
+    ArrayEntry * cur = array_entries;
+    while (cur->next) {
+        cur = cur->next;
+    }
+    cur->next = entry;
+    return array_entries;
+}
+
 ObjectEntry * make_object_entry(char * key, Node * value) {
     ObjectEntry * entry = malloc(sizeof(ObjectEntry));
     entry->key = key;
