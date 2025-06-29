@@ -5,7 +5,7 @@ C-CLON provides a simple, human-readable syntax for command line interfaces whil
 
 ## Overview
 
-C-CLON (Command Line Object Notation) is a library that allows parsing CLON into structured data formats.
+C-CLON is a library that allows parsing CLON (Command Line Object Notation) into structured data formats.
 It bridges the gap between simple command line interfaces and complex data structures.
 
 ## Features
