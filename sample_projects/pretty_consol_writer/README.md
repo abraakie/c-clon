@@ -2,8 +2,8 @@
 
 ## Overview
 
-The Pretty Console Writer sample demonstrates how to use the C-Clon library with a custom console output formatter.
-This sample project shows how to create nicely formatted, human-readable command-line json output with proper indentation and structure from clon.
+The Pretty Console Writer sample demonstrates how to use the C-CLON library with a custom console output formatter.
+This sample project shows how to create nicely formatted, human-readable command-line JSON output with proper indentation and structure from CLON.
 
 ## Building the Sample
 
@@ -26,7 +26,7 @@ cmake --build .
 Run the sample with command line arguments in the following format:
 
 ```bash
-./pretty_console_writer <arg1> <arg2> ...
+./pretty_console_writer <arg1> <arg2> ... <argn>
 ```
 
 ### Example
