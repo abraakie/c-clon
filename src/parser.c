@@ -171,7 +171,7 @@ int parse_key_tail(LxrContext * ctx, Token * token, Node * res, ObjectEntry ** t
         if (entry->value->type != NODE_OBJECT) {
             THROW(0, "Invalid object entry: Can not override existing value");
         }
-        TRY(parse_key_tail(ctx, token, entry->value, &entry, error));
+        TRY(parse_key_tail(ctx, token, entry->value, target, error));
     } else {
         *target = entry;
     }
