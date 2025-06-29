@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(pretty_consol_writer C)
+project(pretty_console_writer C)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -13,5 +13,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(c_clon)
 
-add_executable(pretty_consol_writer main.c)
-target_link_libraries(pretty_consol_writer PRIVATE c_clon)
+add_executable(pretty_console_writer main.c)
+target_link_libraries(pretty_console_writer PRIVATE c_clon)
