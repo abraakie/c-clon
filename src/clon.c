@@ -17,6 +17,10 @@ int parse_arg(const char * arg, const WriterImplementation writer_impl, void * w
     if (parse_value(&ctx, &token, &node, &error)) {
         return ERROR;
     }
+    if (token.type != TOK_EOF) {
+        make_error(&error, arg, token.start, token.length, 0, "Expected expression to end here");
+        return ERROR;
+    }
     writer_impl(writer_context, node);
     free_node(node);
     return SUCCESS;
@@ -46,6 +50,10 @@ int parse_args(const char ** args, const size_t args_count, const WriterImplemen
             if (parse_object_entry(&ctx, &token, &node->object_entries, &error)) {
                 return ERROR;
             }
+        }
+        if (token.type != TOK_EOF) {
+            make_error(&error, args[i], token.start, token.length, 0, "Expected expression to end here");
+            return ERROR;
         }
     }
     if (node->type == NODE_ARRAY && args_count == 1) {
