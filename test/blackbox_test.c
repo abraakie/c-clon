@@ -5,7 +5,7 @@
 #include "json_writer.h"
 #include "clon.h"
 #include "unity.h"
-#include "error_helper.h"
+#include "helper/error_helper.h"
 
 #define TEST_ARG_PARSING(exp, input) do { \
     char buffer[512] = {0}; \
