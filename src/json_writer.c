@@ -2,7 +2,7 @@
 // Created by Aki Abramowski on 15.06.25.
 //
 
-#include "clon_json_writer.h"
+#include "json_writer.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -178,4 +178,4 @@ void write_ast(void * ctx, const Node * node) {
     }
 }
 
-const WriterImplementation JSON_WRITER_IMPL = write_ast;
+const WriterImpl JSON_WRITER_IMPL = write_ast;

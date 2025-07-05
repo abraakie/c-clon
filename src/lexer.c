@@ -70,7 +70,7 @@ int next_token(LxrContext *ctx, Token * token, Error * error) {
             c = advance(ctx);
         } while (c && !(c == par && last != '\\'));
         if (c != par) {
-            make_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, &ctx->input[ctx->pos] - start, "Unterminated string");
+            make_syntax_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, &ctx->input[ctx->pos] - start, "Unterminated string");
             return ERROR;
         }
         advance(ctx);
@@ -98,6 +98,6 @@ int next_token(LxrContext *ctx, Token * token, Error * error) {
         *token = (Token) {TOK_STRING, start, &ctx->input[ctx->pos] - start};
         return SUCCESS;
     }
-    make_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, 0, "Unknown token");
+    make_syntax_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, 0, "Unknown token");
     return ERROR;
 }

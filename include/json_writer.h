@@ -23,6 +23,6 @@ Context make_json_writer_context(char* buffer, size_t buffer_size);
 Context make_pretty_json_writer_context(char* buffer, size_t buffer_size);
 Context make_pretty_indent_json_writer_context(char* buffer, size_t buffer_size, int indent_size);
 
-extern const WriterImplementation JSON_WRITER_IMPL;
+extern const WriterImpl JSON_WRITER_IMPL;
 
 #endif //CLON_JSON_WRITER_H

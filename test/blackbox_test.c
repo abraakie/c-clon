@@ -2,7 +2,7 @@
 // Created by Aki Abramowski on 11.06.25.
 //
 
-#include "clon_json_writer.h"
+#include "json_writer.h"
 #include "clon.h"
 #include "unity.h"
 

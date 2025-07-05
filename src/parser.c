@@ -90,7 +90,7 @@ int parse_number(LxrContext * ctx, Token * token, Number * res, Error * error) {
     }
 
     if (p != token->length) {
-        make_error(error, ctx->input, token->start, token->length, ctx->input - token->start + p, "Invalid number: Unexpected symbol");
+        make_syntax_error(error, ctx->input, token->start, token->length, ctx->input - token->start + p, "Invalid number: Unexpected symbol");
         return ERROR;
     }
 

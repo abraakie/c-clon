@@ -3,6 +3,7 @@
 //
 
 #include "parser.h"
+#include "error_handler.h"
 
 #include <stdlib.h>
 #include <string.h>

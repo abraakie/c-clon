@@ -6,6 +6,6 @@
 #define WRITER_H
 #include "ast.h"
 
-typedef void (*WriterImplementation) (void * context, const Node * node);
+typedef void (*WriterImpl) (void * context, const Node * node);
 
 #endif //WRITER_H
