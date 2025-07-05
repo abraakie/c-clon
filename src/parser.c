@@ -349,7 +349,7 @@ int parse_value(LxrContext * ctx, Token * token, Node ** res, Error * error) {
             break;
         }
         default: {
-            THROW(0, "Invalid value: Expected number, string, true, false, null, array or object");
+            THROW(0, "Expected one of these value types: number, string, true, false, null, array or object");
         }
     }
     return SUCCESS;
