@@ -19,7 +19,7 @@ void test_syntax_error_formatting() {
         "                 !\n"
         "                 ^\n"
         "My Error";
-    const char actual[512] = {0};
+    char actual[512] = {0};
     format_error(&error, actual, sizeof(actual));
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
@@ -32,7 +32,7 @@ void test_syntax_error_formatting_eof_token() {
         "my_awesome_faulty_input=\n"
         "                        ^\n"
         "My Missing Value Error";
-    const char actual[512] = {0};
+    char actual[512] = {0};
     format_error(&error, actual, sizeof(actual));
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
@@ -41,7 +41,7 @@ void test_memory_error_formatting() {
     Error error;
     make_memory_error(&error, "My Mem Err");
     const char * expected = "Memory allocation failed: My Mem Err";
-    const char actual[512] = {0};
+    char actual[512] = {0};
     format_error(&error, actual, sizeof(actual));
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
@@ -50,7 +50,7 @@ void test_buffer_overflow_error_formatting() {
     Error error;
     make_buffer_overflow_error(&error, "My Buffer Overflow Err");
     const char * expected = "Buffer overflow: My Buffer Overflow Err";
-    const char actual[512] = {0};
+    char actual[512] = {0};
     format_error(&error, actual, sizeof(actual));
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
