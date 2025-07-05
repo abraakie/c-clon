@@ -14,7 +14,7 @@ int main(const int argc, const char ** argv) {
     }
 
     char buffer[1024] = {0};
-    Context context = make_pretty_json_writer_context(buffer, sizeof(buffer));
+    Context context = make_pretty_indent_json_writer_context(buffer, sizeof(buffer), 2);
     if (parse_args(argv + 1, argc - 1, JSON_WRITER_IMPL, &context)) {
         fprintf(stderr, "Parsing failed\n");
         return 1;

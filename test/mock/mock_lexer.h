@@ -16,7 +16,7 @@
 })
 
 #define MAKE_MOCK_LEXER_INIT(...) \
-    MockLxrContext ctx = MAKE_MOCK_LEXER(__VA_ARGS__); \
+    MockLxrContext ctx = MAKE_MOCK_LEXER(__VA_ARGS__, TOKEN_EOF); \
     LxrContext * ctx_ptr = (LxrContext *) &ctx; \
     Error error; \
     Error * err_ptr = &error; \

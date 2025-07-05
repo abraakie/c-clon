@@ -8,13 +8,9 @@
 
 int next_token(LxrContext *ctx, Token * token, Error * error) {
     MockLxrContext * mock_ctx = (MockLxrContext *) ctx;
-    if (mock_ctx->input_tokens_pos > mock_ctx->input_tokens_len) {
-        make_error(error, mock_ctx->input, token->start, 0, 0, "pos > input_len");
+    if (mock_ctx->input_tokens_pos >= mock_ctx->input_tokens_len) {
+        make_syntax_error(error, mock_ctx->input, token->start, 0, 0, "pos > input_len");
         return ERROR;
-    }
-    if (mock_ctx->input_tokens_pos == mock_ctx->input_tokens_len) {
-        *token = TOKEN_EOF;
-        return SUCCESS;
     }
     *token = mock_ctx->input_tokens[mock_ctx->input_tokens_pos++];
     mock_ctx->pos += token->length;

@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#include "clon_json_writer.h"
+#include "json_writer.h"
 #include "unity.h"
 #include "helper/node_helper.h"
 
