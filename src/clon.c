@@ -20,7 +20,7 @@ int parse_arg(const char * arg, const WriterImpl writer_impl, void * writer_cont
         return ERROR;
     }
     if (token.type != TOK_EOF) {
-        make_error(&error, arg, token.start, token.length, 0, "Expected expression to end here");
+        make_syntax_error(&error, arg, token.start, token.length, 0, "Expected expression to end here");
         return ERROR;
     }
     writer_impl(writer_context, node);
@@ -59,7 +59,7 @@ int parse_args(const char ** args, const size_t args_count, const WriterImpl wri
             }
         }
         if (token.type != TOK_EOF) {
-            make_error(&error, args[i], token.start, token.length, 0, "Expected expression to end here");
+            make_syntax_error(&error, args[i], token.start, token.length, 0, "Expected expression to end here");
             return ERROR;
         }
     }
