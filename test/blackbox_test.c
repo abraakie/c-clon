@@ -10,7 +10,7 @@
 #define TEST_ARG_PARSING(exp, input) do { \
     char buffer[512] = {0}; \
     Context context = make_json_writer_context(buffer, sizeof(buffer)); \
-    TEST_ASSERT_FALSE(parse_arg(input, JSON_WRITER_IMPL, &context, TEST_ERROR_HANDLER, NULL)); \
+    TEST_ASSERT_FALSE(parse_arg(input, JSON_WRITER_IMPL, &context, TEST_ERROR_HANDLER_IMPL, NULL)); \
     TEST_ASSERT_EQUAL_STRING(exp, buffer); \
 } while (0)
 
@@ -18,7 +18,7 @@
     const char * const args[] = {__VA_ARGS__}; \
     char buffer[512] = {0}; \
     Context context = make_json_writer_context(buffer, sizeof(buffer)); \
-    TEST_ASSERT_FALSE(parse_args((const char **)args, sizeof(args) / sizeof(args[0]), JSON_WRITER_IMPL, &context, TEST_ERROR_HANDLER, NULL)); \
+    TEST_ASSERT_FALSE(parse_args((const char **)args, sizeof(args) / sizeof(args[0]), JSON_WRITER_IMPL, &context, TEST_ERROR_HANDLER_IMPL, NULL)); \
     TEST_ASSERT_EQUAL_STRING(exp, buffer); \
 } while (0)
 
