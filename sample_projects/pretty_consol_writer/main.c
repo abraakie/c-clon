@@ -10,7 +10,7 @@
 void handle_error(void * context, const Error *error) {
     char buffer[512] = {0};
     format_error(error, buffer, sizeof(buffer));
-    printf("%s\n", buffer);
+    fprintf(stderr, "%s\n", buffer);
 }
 
 int main(const int argc, const char ** argv) {
@@ -22,7 +22,6 @@ int main(const int argc, const char ** argv) {
     char buffer[1024] = {0};
     Context context = make_pretty_indent_json_writer_context(buffer, sizeof(buffer), 2);
     if (parse_args(argv + 1, argc - 1, JSON_WRITER_IMPL, &context, handle_error, NULL)) {
-        fprintf(stderr, "Parsing failed\n");
         return 1;
     }
 
