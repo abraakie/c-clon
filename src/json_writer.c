@@ -143,7 +143,7 @@ static void write_node(Context * context, const Node * node) {
             if (node->number_value.type == NUMBER_INT) {
                 context->pos += snprintf(context->buffer + context->pos,
                                       context->buffer_size - context->pos,
-                                      "%lld", node->number_value.i);
+                                      "%ld", node->number_value.i);
             } else {
                 context->pos += snprintf(context->buffer + context->pos,
                                       context->buffer_size - context->pos,
@@ -167,7 +167,7 @@ static void write_node(Context * context, const Node * node) {
     }
 }
 
-void write_ast(void * ctx, const Node * node) {
+static void write_ast(void * ctx, const Node * node) {
     if (!ctx || !node) {
         return;
     }

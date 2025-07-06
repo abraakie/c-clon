@@ -197,7 +197,9 @@ int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** 
 int parse_array_entry(LxrContext * ctx, Token * token, ArrayEntry ** res, Error * error) {
     Node * node;
     TRY(parse_value(ctx, token, &node, error));
-    *res = append_array_entry(*res, node);
+    ArrayEntry * entry = make_array_entry(node);
+    CHECK_NOT_NULL(entry);
+    *res = append_array_entry_entry(*res, entry);
     return SUCCESS;
 }
 
