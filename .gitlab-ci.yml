@@ -8,32 +8,12 @@ workflow:
 stages:
   - build
   - test
+  - report
 
 .setup:
   before_script:
     - apt-get update -qq
     - apt-get install -y cmake make gcovr
-
-lint:
-  stage: build
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y clang-tidy cppcheck codespell cmake
-  script:
-    - cppcheck --enable=all --inconclusive --xml --xml-version=2 --suppress=missingInclude --output-file=cppcheck-result.xml .
-    - mkdir -p build
-    - cd build
-    - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-    - cd ..
-    - find . -type f \( -name '*.c' -o -name '*.h' \) ! -path "*/_deps/*" | xargs clang-tidy -p build
-    - codespell --skip="*.git,*.pdf,*/build/*"
-  artifacts:
-    reports:
-      codequality: cppcheck-result.xml
-    expire_in: 1 week
-    paths:
-      - cppcheck-result.xml
-  allow_failure: true
 
 build:
   extends: .setup
@@ -46,6 +26,34 @@ build:
   artifacts:
     paths:
       - build/
+
+cppcheck:
+  stage: test
+  image: neszt/cppcheck-docker:2.17.1
+  dependencies: []
+  script:
+    - cppcheck --enable=all --xml --check-level=exhaustive --suppress=missingIncludeSystem --suppress=checkersReport --output-file=cppcheck-report.xml ./src -I ./include
+    - cat cppcheck-report.xml
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - cppcheck-report.xml
+  allow_failure: true
+
+codespell:
+  stage: test
+  dependencies: []
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y codespell
+  script:
+    - codespell --skip="*.git,*.pdf,*/build/*" . > codespell-report.txt || true
+    - cat codespell-report.txt
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - codespell-report.txt
+  allow_failure: true
 
 test:
   extends: .setup
@@ -67,3 +75,21 @@ test:
       - build/coverage.xml
       - build/test_results.xml
     expire_in: 1 week
+
+report:
+  stage: report
+  needs:
+    - job: cppcheck
+      artifacts: true
+    - job: codespell
+      artifacts: true
+  before_script:
+    - apt-get update
+    - apt-get install -y jq xmlstarlet
+  script:
+    - ci/scripts/cppcheck_results_converter.sh ./cppcheck-report.xml ./cppcheck-report.json
+    - ci/scripts/codespell_results_converter.sh ./codespell-report.txt ./codespell-report.json
+    - jq -s 'add' cppcheck-report.json codespell-report.json > codequality.json
+  artifacts:
+    reports:
+      codequality: codequality.json
