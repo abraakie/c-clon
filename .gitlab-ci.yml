@@ -32,7 +32,7 @@ cppcheck:
   image: neszt/cppcheck-docker:2.17.1
   dependencies: []
   script:
-    - cppcheck --enable=all --xml --suppress=missingIncludeSystem --output-file=cppcheck-report.xml ./src -I ./include
+    - cppcheck --enable=all --xml --check-level=exhaustive --suppress=missingIncludeSystem --suppress=checkersReport --output-file=cppcheck-report.xml ./src -I ./include
     - cat cppcheck-report.xml
   artifacts:
     expire_in: 1 week

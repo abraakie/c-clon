@@ -25,8 +25,8 @@ xmlstarlet sel -T -t \
   -v "@msg" -o $'\t' \
   -v "@id"  -o $'\t' \
   -v "@severity" -o $'\t' \
-  -v "location/@file" -o $'\t' \
-  -v "location/@line" -n \
+  -v "location[1]/@file" -o $'\t' \
+  -v "location[1]/@line" -n \
   "$input_file" \
 | while IFS=$'\t' read -r msg id sev path line; do
     msg_escaped=$(printf '%s' "$msg" | sed 's/"/\\"/g')
