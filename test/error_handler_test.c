@@ -10,7 +10,7 @@
 void setUp() {}
 void tearDown() {}
 
-void test_syntax_error_formatting() {
+static void test_syntax_error_formatting() {
     const char * input = "my_awesome_faulty!input";
     Error error;
     make_syntax_error(&error, input, &input[17], 1, 0, "My Error");
@@ -24,7 +24,7 @@ void test_syntax_error_formatting() {
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
 
-void test_syntax_error_formatting_eof_token() {
+static void test_syntax_error_formatting_eof_token() {
     const char * input = "my_awesome_faulty_input=";
     Error error;
     make_syntax_error(&error, input, &input[24], 0, 0, "My Missing Value Error");
@@ -37,7 +37,7 @@ void test_syntax_error_formatting_eof_token() {
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
 
-void test_memory_error_formatting() {
+static void test_memory_error_formatting() {
     Error error;
     make_memory_error(&error, "My Mem Err");
     const char * expected = "Memory allocation failed: My Mem Err";
@@ -46,7 +46,7 @@ void test_memory_error_formatting() {
     TEST_ASSERT_EQUAL_STRING(expected, actual);
 }
 
-void test_buffer_overflow_error_formatting() {
+static void test_buffer_overflow_error_formatting() {
     Error error;
     make_buffer_overflow_error(&error, "My Buffer Overflow Err");
     const char * expected = "Buffer overflow: My Buffer Overflow Err";

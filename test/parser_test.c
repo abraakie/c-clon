@@ -119,18 +119,16 @@
     free_node(actual); \
 } while (0)
 
-void setUp(void) {
-}
+void setUp() {}
 
-void tearDown(void) {
-}
+void tearDown() {}
 
-void test_string_parsing() {
+static void test_string_parsing() {
     TEST_STRING_PARSING("hello", "hello");
     TEST_STRING_PARSING("Hello \"World\"!", "Hello \\\"World\\\"!");
 }
 
-void test_number_parsing() {
+static void test_number_parsing() {
     TEST_NUMBER_PARSING(NUMBER_I(0), "0");
     TEST_NUMBER_PARSING(NUMBER_I(123), "123");
     TEST_NUMBER_PARSING(NUMBER_I(-123), "-123");
@@ -143,7 +141,7 @@ void test_number_parsing() {
     TEST_NUMBER_PARSING(NUMBER_F(-1.5), "-15e-1");
 }
 
-void test_object_entry_parsing() {
+static void test_object_entry_parsing() {
     TEST_OBJECT_ENTRY_PARSING(MAKE_OBJECT_ENTRY("key", MAKE_NODE_NULL()), TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL);
     TEST_OBJECT_ENTRY_PARSING(MAKE_OBJECT_ENTRY("key_one", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key_two", MAKE_NODE_NULL()))),
         TOKEN_STRING("key_one"), TOKEN_DOT, TOKEN_STRING("key_two"), TOKEN_EQUAL, TOKEN_NULL);
@@ -161,11 +159,11 @@ void test_object_entry_parsing() {
         TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NULL);
 }
 
-void test_array_entry_parsing() {
+static void test_array_entry_parsing() {
     TEST_ARRAY_ENTRY_PARSING(MAKE_ARRAY_ENTRIES(MAKE_NODE_NULL()), TOKEN_NULL);
 }
 
-void test_array_or_object_parsing() {
+static void test_array_or_object_parsing() {
     TEST_ARRAY_OR_OBJECT_PARSING(MAKE_NODE_ARRAY(), TOKEN_LBRACKET, TOKEN_RBRACKET);
     TEST_ARRAY_OR_OBJECT_PARSING(MAKE_NODE_OBJECT(), TOKEN_LBRACKET, TOKEN_EQUAL, TOKEN_RBRACKET);
     TEST_ARRAY_OR_OBJECT_PARSING(MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("null_1", MAKE_NODE_NULL()), MAKE_OBJECT_ENTRY("null_2", MAKE_NODE_NULL())), TOKEN_LBRACKET, TOKEN_STRING("null_1"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_COMMA, TOKEN_STRING("null_2"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_RBRACKET);
@@ -186,7 +184,7 @@ void test_array_or_object_parsing() {
         TOKEN_LBRACKET, TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NUMBER("1"), TOKEN_COMMA, TOKEN_STRING("key"), TOKEN_LBRACKET, TOKEN_RBRACKET, TOKEN_EQUAL, TOKEN_NUMBER("2"), TOKEN_RBRACKET);
 }
 
-void test_value_parsing() {
+static void test_value_parsing() {
     TEST_VALUE_PARSING(MAKE_NODE_NULL(), TOKEN_NULL);
     TEST_VALUE_PARSING(MAKE_NODE_BOOL(1), TOKEN_TRUE);
     TEST_VALUE_PARSING(MAKE_NODE_BOOL(0), TOKEN_FALSE);
@@ -199,7 +197,7 @@ void test_value_parsing() {
     TEST_VALUE_PARSING(MAKE_NODE_ARRAY(MAKE_NODE_OBJECT()), TOKEN_LBRACKET, TOKEN_LBRACKET, TOKEN_EQUAL, TOKEN_RBRACKET, TOKEN_RBRACKET);
 }
 
-void test_value_parsing_error() {
+static void test_value_parsing_error() {
     TEST_VALUE_PARSING_ERROR(TOKEN_LBRACKET, TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_COMMA, TOKEN_STRING("key"), TOKEN_DOT, TOKEN_STRING("key"), TOKEN_EQUAL, TOKEN_NULL, TOKEN_RBRACKET);
 }
 

@@ -22,17 +22,15 @@
     TEST_ASSERT_EQUAL_STRING(exp, buffer); \
 } while (0)
 
-void setUp(void) {
-}
+void setUp() {}
 
-void tearDown(void) {
-}
+void tearDown() {}
 
-void test_arg_parsing() {
+static void test_arg_parsing() {
     TEST_ARG_PARSING("null", "null");
 }
 
-void test_args_parsing() {
+static void test_args_parsing() {
     TEST_ARGS_PARSING("null", "null");
     TEST_ARGS_PARSING("[null,null]", "null", "null");
     TEST_ARGS_PARSING("[null,{}]", "null", "[=]");
