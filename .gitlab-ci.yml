@@ -29,12 +29,11 @@ build:
 
 cppcheck:
   stage: test
+  image: neszt/cppcheck-docker:2.17.1
   dependencies: []
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y cppcheck
   script:
-    - cppcheck --enable=all --xml --xml-version=2 --suppress=missingIncludeSystem --output-file=cppcheck-report.xml ./src -I ./include
+    - cppcheck --enable=all --xml --suppress=missingIncludeSystem --output-file=cppcheck-report.xml ./src -I ./include
+    - cat cppcheck-report.xml
   artifacts:
     expire_in: 1 week
     paths:
