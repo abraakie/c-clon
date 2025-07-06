@@ -14,10 +14,6 @@ static char advance(LxrContext *ctx) {
     return ctx->input[++ctx->pos];
 }
 
-LxrContext make_lxr_context(const char *input) {
-    return (LxrContext) {input, 0};
-}
-
 int next_token(LxrContext *ctx, Token * token, Error * error) {
     const char * start = &ctx->input[ctx->pos];
     char c = peek(ctx);

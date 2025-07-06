@@ -134,8 +134,6 @@ else { \
     TEST_FAIL_MESSAGE("Nodes do not equal"); \
 }
 
-const char * number_type_to_string(NumberType type);
-
 int array_entries_equals(ArrayEntry * a, ArrayEntry * b);
 int object_entries_equals(ObjectEntry * a, ObjectEntry * b);
 int node_equals(const Node * a, const Node * b);

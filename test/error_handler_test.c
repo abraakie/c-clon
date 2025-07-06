@@ -5,8 +5,6 @@
 #include "unity.h"
 #include "error_handler.h"
 
-#include <stdlib.h>
-
 void setUp() {}
 void tearDown() {}
 
