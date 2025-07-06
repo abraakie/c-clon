@@ -88,7 +88,7 @@ ObjectEntry * object_entry_get_entry(ObjectEntry * object_entries, const char * 
     return NULL;
 }
 
-static void free_object_entry(ObjectEntry * object_entry) {
+void free_object_entry(ObjectEntry * object_entry) {
     if (!object_entry) {
         return;
     }
@@ -98,7 +98,7 @@ static void free_object_entry(ObjectEntry * object_entry) {
     free(object_entry);
 }
 
-static void free_array_entry(ArrayEntry * array_entry) {
+void free_array_entry(ArrayEntry * array_entry) {
     if (!array_entry) {
         return;
     }
