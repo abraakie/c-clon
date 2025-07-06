@@ -32,14 +32,13 @@ cppcheck:
   dependencies: []
   before_script:
     - apt-get update -qq
-    - apt-get install -y cppcheck xmlstarlet
+    - apt-get install -y cppcheck
   script:
-    - cppcheck --enable=all --inconclusive --xml --xml-version=2 --suppress=missingInclude --output-file=cppcheck-result.xml .
-    - ci/scripts/cppcheck_results_converter.sh ./cppcheck-result.xml ./cppcheck-report.json
+    - cppcheck --enable=all --xml --xml-version=2 --suppress=missingIncludeSystem --output-file=cppcheck-report.xml ./src -I ./include
   artifacts:
     expire_in: 1 week
     paths:
-      - cppcheck-report.json
+      - cppcheck-report.xml
   allow_failure: true
 
 codespell:
@@ -50,11 +49,11 @@ codespell:
     - apt-get install -y codespell
   script:
     - codespell --skip="*.git,*.pdf,*/build/*" . > codespell-report.txt || true
-    - ci/scripts/codespell_results_converter.sh ./codespell-report.txt ./codespell-report.json
+    - cat codespell-report.txt
   artifacts:
     expire_in: 1 week
     paths:
-      - codespell-report.json
+      - codespell-report.txt
   allow_failure: true
 
 test:
@@ -87,8 +86,10 @@ report:
       artifacts: true
   before_script:
     - apt-get update
-    - apt-get install -y jq
+    - apt-get install -y jq xmlstarlet
   script:
+    - ci/scripts/cppcheck_results_converter.sh ./cppcheck-report.xml ./cppcheck-report.json
+    - ci/scripts/codespell_results_converter.sh ./codespell-report.txt ./codespell-report.json
     - jq -s 'add' cppcheck-report.json codespell-report.json > codequality.json
   artifacts:
     reports:
