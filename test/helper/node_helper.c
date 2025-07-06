@@ -101,7 +101,7 @@ size_t node_write(const Node *node, char *buffer, const size_t buffer_size) {
     switch (node->type) {
         case NODE_NUMBER:
             if (node->number_value.type == NUMBER_INT) {
-                written += snprintf(buffer + written, buffer_size - written, "%lld", node->number_value.i);
+                written += snprintf(buffer + written, buffer_size - written, "%ld", node->number_value.i);
             } else {
                 written += snprintf(buffer + written, buffer_size - written, "%g", node->number_value.f);
             }

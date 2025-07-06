@@ -147,7 +147,7 @@ int parse_string(LxrContext * ctx, Token * token, char ** res, Error * error) {
     return SUCCESS;
 }
 
-int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** target, Error * error) {
+static int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** target, Error * error) {
     const int brak = token->type == TOK_LBRACKET;
     TRY(next_token(ctx, token, error));
     if (token->type == TOK_RBRACKET) {
