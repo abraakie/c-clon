@@ -90,7 +90,7 @@ int parse_number(LxrContext * ctx, Token * token, Number * res, Error * error) {
     }
 
     if (p != token->length) {
-        make_error(error, ctx->input, token->start, token->length, ctx->input - token->start + p, "Invalid number: Unexpected symbol");
+        make_syntax_error(error, ctx->input, token->start, token->length, ctx->input - token->start + p, "Invalid number: Unexpected symbol");
         return ERROR;
     }
 
@@ -147,7 +147,7 @@ int parse_string(LxrContext * ctx, Token * token, char ** res, Error * error) {
     return SUCCESS;
 }
 
-int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** target, Error * error) {
+static int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** target, Error * error) {
     const int brak = token->type == TOK_LBRACKET;
     TRY(next_token(ctx, token, error));
     if (token->type == TOK_RBRACKET) {
@@ -197,7 +197,9 @@ int parse_key_tail(LxrContext * ctx, Token * token, ObjectEntry * res, Node *** 
 int parse_array_entry(LxrContext * ctx, Token * token, ArrayEntry ** res, Error * error) {
     Node * node;
     TRY(parse_value(ctx, token, &node, error));
-    *res = append_array_entry(*res, node);
+    ArrayEntry * entry = make_array_entry(node);
+    CHECK_NOT_NULL(entry);
+    *res = append_array_entry_entry(*res, entry);
     return SUCCESS;
 }
 
@@ -349,7 +351,7 @@ int parse_value(LxrContext * ctx, Token * token, Node ** res, Error * error) {
             break;
         }
         default: {
-            THROW(0, "Invalid value: Expected number, string, true, false, null, array or object");
+            THROW(0, "Expected one of these value types: number, string, true, false, null, array or object");
         }
     }
     return SUCCESS;

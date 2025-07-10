@@ -9,12 +9,14 @@
 
 Node * make_node(const NodeType type) {
     Node * node = calloc(1, sizeof(Node));
+    if (!node) return NULL;
     node->type = type;
     return node;
 }
 
 ArrayEntry * make_array_entry(Node * value) {
     ArrayEntry * entry = calloc(1, sizeof(ArrayEntry));
+    if (!entry) return NULL;
     entry->value = value;
     return entry;
 }
@@ -45,6 +47,7 @@ ArrayEntry * append_array_entry_entry(ArrayEntry * array_entries, ArrayEntry * e
 
 ObjectEntry * make_object_entry(char * key, Node * value) {
     ObjectEntry * entry = malloc(sizeof(ObjectEntry));
+    if (!entry) return NULL;
     entry->key = key;
     entry->value = value;
     entry->next = NULL;

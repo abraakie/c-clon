@@ -10,7 +10,7 @@
 #include "unity.h"
 
 #define NUMBER_F(n) ((Number){.type=NUMBER_FLOAT, .f=n})
-#define NUMBER_I(n) ((Number){NUMBER_INT, n})
+#define NUMBER_I(n) ((Number){.type=NUMBER_INT, .i=n})
 
 #define MAKE_NODE_NUMBER_F(num) ({ \
     Node * node = make_node(NODE_NUMBER); \
@@ -133,8 +133,6 @@ else { \
     printf("Expected: %s\nActual: %s\n", exp_msg, act_msg); \
     TEST_FAIL_MESSAGE("Nodes do not equal"); \
 }
-
-const char * number_type_to_string(NumberType type);
 
 int array_entries_equals(ArrayEntry * a, ArrayEntry * b);
 int object_entries_equals(ObjectEntry * a, ObjectEntry * b);

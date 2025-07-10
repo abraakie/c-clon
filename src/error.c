@@ -4,7 +4,7 @@
 
 #include "error.h"
 
-void make_error(Error * error, const char * input, const char * token_start, const size_t token_length, const size_t local_pos, const char * message) {
+void make_syntax_error(Error * error, const char * input, const char * token_start, const size_t token_length, const size_t local_pos, const char * message) {
     error->type = ERR_SYNTAX;
     error->input = input;
     error->token_start = token_start;
@@ -13,20 +13,20 @@ void make_error(Error * error, const char * input, const char * token_start, con
     error->message = message;
 }
 
-size_t format_error(const Error *error, char *buffer, size_t buffer_len) {
-    if (!error || !buffer || !buffer_len) return 0;
-    size_t written = snprintf(buffer, buffer_len, "%s\n", error->input);
-    if (written >= buffer_len) return buffer_len;
+void make_memory_error(Error * error, const char * message) {
+    error->type = ERR_MEMORY;
+    error->input = NULL;
+    error->token_start = NULL;
+    error->token_length = 0;
+    error->pos = 0;
+    error->message = message;
+}
 
-    const size_t token_start_pos = error->token_start - error->input;
-    for (size_t i = 0; i < token_start_pos && written < buffer_len; i++) {
-        buffer[written++] = ' ';
-    }
-    written += snprintf(buffer + written, buffer_len - written, "%.*s\n", (int) error->token_length, error->token_start);
-
-    for (size_t i = 0; i < error->pos && written < buffer_len; i++) {
-        buffer[written++] = ' ';
-    }
-    written += snprintf(buffer + written, buffer_len - written, "^\n%s", error->message ? error->message : "Unknown error");
-    return written;
+void make_buffer_overflow_error(Error * error, const char * message) {
+    error->type = ERR_BUFFER_OVERFLOW;
+    error->input = NULL;
+    error->token_start = NULL;
+    error->token_length = 0;
+    error->pos = 0;
+    error->message = message;
 }

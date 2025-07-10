@@ -3,7 +3,8 @@ add_library(parser STATIC parser.c)
 add_library(ast STATIC ast.c)
 add_library(error STATIC error.c)
 add_library(writer STATIC writer.c)
-add_library(clon_json_writer STATIC clon_json_writer.c)
+add_library(json_writer STATIC json_writer.c)
+add_library(error_handler STATIC error_handler.c)
 
 set(COMPONENT_LIBS
         ast
@@ -11,7 +12,8 @@ set(COMPONENT_LIBS
         lexer
         parser
         writer
-        clon_json_writer
+        json_writer
+        error_handler
 )
 
 foreach(lib ${COMPONENT_LIBS})
@@ -28,12 +30,20 @@ target_link_libraries(lexer
         error
 )
 
-target_link_libraries(clon_json_writer PUBLIC writer)
-
 target_link_libraries(parser
         PUBLIC
         lexer
         ast
+        error
+)
+
+target_link_libraries(json_writer
+        PUBLIC
+        writer
+)
+
+target_link_libraries(error_handler
+        PUBLIC
         error
 )
 

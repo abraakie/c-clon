@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-#include "clon_json_writer.h"
+#include "json_writer.h"
 #include "unity.h"
 #include "helper/node_helper.h"
 
@@ -26,13 +26,11 @@
     TEST_ASSERT_EQUAL_STRING(exp, buf); \
 } while (0)
 
-void setUp(void) {
-}
+void setUp() {}
 
-void tearDown(void) {
-}
+void tearDown() {}
 
-void test_simple_json_value_writing() {
+static void test_simple_json_value_writing() {
     TEST_JSON_WRITING("null", MAKE_NODE_NULL());
     TEST_JSON_WRITING("true", MAKE_NODE_BOOL(1));
     TEST_JSON_WRITING("false", MAKE_NODE_BOOL(0));
@@ -42,7 +40,7 @@ void test_simple_json_value_writing() {
     TEST_JSON_WRITING("{}", MAKE_NODE_OBJECT());
 }
 
-void test_string_special_character_parsing() {
+static void test_string_special_character_parsing() {
     TEST_JSON_WRITING("\"\\\"\"", MAKE_NODE_STRING("\""));
     TEST_JSON_WRITING("\"\\\\\"", MAKE_NODE_STRING("\\"));
     TEST_JSON_WRITING("\"\\/\"", MAKE_NODE_STRING("/"));
@@ -53,19 +51,19 @@ void test_string_special_character_parsing() {
     TEST_JSON_WRITING("\"\\\t\"", MAKE_NODE_STRING("\t"));
 }
 
-void test_object_json_writing() {
+static void test_object_json_writing() {
     TEST_JSON_WRITING("{\"key\":\"value\"}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_STRING("value"))));
     TEST_JSON_WRITING("{\"key\":\"value\",\"key2\":\"value2\"}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_STRING("value")), MAKE_OBJECT_ENTRY("key2", MAKE_NODE_STRING("value2"))));
     TEST_JSON_WRITING("{\"key\":\"value\",\"key2\":{\"inner_key\":\"inner_value\"}}", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("key", MAKE_NODE_STRING("value")), MAKE_OBJECT_ENTRY("key2", MAKE_NODE_OBJECT(MAKE_OBJECT_ENTRY("inner_key", MAKE_NODE_STRING("inner_value"))))));
 }
 
-void test_array_json_writing() {
+static void test_array_json_writing() {
     TEST_JSON_WRITING("[\"a\"]", MAKE_NODE_ARRAY(MAKE_NODE_STRING("a")));
     TEST_JSON_WRITING("[\"a\",\"b\"]", MAKE_NODE_ARRAY(MAKE_NODE_STRING("a"), MAKE_NODE_STRING("b")));
     TEST_JSON_WRITING("[\"a\",[\"b\"],[[\"c\"]]]", MAKE_NODE_ARRAY(MAKE_NODE_STRING("a"), MAKE_NODE_ARRAY(MAKE_NODE_STRING("b")), MAKE_NODE_ARRAY(MAKE_NODE_ARRAY(MAKE_NODE_STRING("c")))));
 }
 
-void test_pretty_json_writing() {
+static void test_pretty_json_writing() {
     TEST_JSON_PRETTY_WRITING("[ ]", MAKE_NODE_ARRAY(), 4);
     TEST_JSON_PRETTY_WRITING("{ }", MAKE_NODE_OBJECT(), 4);
     TEST_JSON_PRETTY_WRITING(

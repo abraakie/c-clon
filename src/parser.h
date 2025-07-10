@@ -9,8 +9,8 @@
 #include "lexer.h"
 
 #define TRY(expr) if ((expr) != SUCCESS) { return ERROR; }
-#define THROW(pos, msg) do { make_error(error, ctx->input, token->start, token->length, pos, msg); return ERROR; } while (0)
-#define CHECK_NOT_NULL(ptr) if (!(ptr)) { make_error(error, ctx->input, token->start, token->length, 0, "Memory allocation failed"); return ERROR; }
+#define THROW(pos, msg) do { make_syntax_error(error, ctx->input, token->start, token->length, pos, msg); return ERROR; } while (0)
+#define CHECK_NOT_NULL(ptr) if (!(ptr)) { make_memory_error(error, "Memory allocation failed"); return ERROR; }
 
 int parse_first_array_or_object_entry(LxrContext * ctx, Token * token, Node * res, Error * error);
 int parse_array_entry(LxrContext * ctx, Token * token, ArrayEntry ** res, Error * error);

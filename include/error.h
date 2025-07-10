@@ -12,7 +12,7 @@
 typedef enum ErrorType {
     ERR_SYNTAX,
     ERR_MEMORY,
-    ERR_OVERFLOW,
+    ERR_BUFFER_OVERFLOW,
 } ErrorType;
 
 typedef struct Error {
@@ -24,7 +24,8 @@ typedef struct Error {
     const char *message;
 } Error;
 
-void make_error(Error * error, const char * input, const char * token_start, size_t token_length, size_t local_pos, const char * message);
-size_t format_error(const Error * error, char * buffer, size_t buffer_len);
+void make_syntax_error(Error * error, const char * input, const char * token_start, size_t token_length, size_t local_pos, const char * message);
+void make_memory_error(Error * error, const char * message);
+void make_buffer_overflow_error(Error * error, const char * message);
 
 #endif //COMMON_H

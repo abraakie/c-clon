@@ -6,14 +6,6 @@
 
 #include <string.h>
 
-const char * number_type_to_string(const NumberType type) {
-    switch (type) {
-        case NUMBER_INT: return "NUMBER_INT";
-        case NUMBER_FLOAT: return "NUMBER_FLOAT";
-        default: return "UNKNOWN";
-    }
-}
-
 int array_entries_equals(ArrayEntry * a, ArrayEntry * b) {
     while (a && b) {
         if (!node_equals(a->value, b->value)) {

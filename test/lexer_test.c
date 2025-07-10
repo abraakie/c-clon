@@ -62,13 +62,11 @@
     ASSERT_TOKEN_MESSAGE(TOKEN(TOK_EOF, ""), actual, "Expected EOF at the end of input"); \
 } while(0)
 
-void setUp(void) {
-}
+void setUp() {}
 
-void tearDown(void) {
-}
+void tearDown() {}
 
-void test_single_tokens() {
+static void test_single_tokens() {
     ASSERT_TOKEN_SEQUENCE("=", TOKEN_EQUAL);
     ASSERT_TOKEN_SEQUENCE("[", TOKEN_LBRACKET);
     ASSERT_TOKEN_SEQUENCE("]", TOKEN_RBRACKET);
@@ -77,25 +75,25 @@ void test_single_tokens() {
     ASSERT_TOKEN_SEQUENCE("");
 }
 
-void test_number_tokens() {
+static void test_number_tokens() {
     ASSERT_TOKEN_SEQUENCE("1.67e+5", TOKEN_NUMBER("1.67e+5"));
     ASSERT_TOKEN_SEQUENCE("572452454531454364513452345", TOKEN_NUMBER("572452454531454364513452345"));
 }
 
-void test_string_tokens() {
+static void test_string_tokens() {
     ASSERT_TOKEN_SEQUENCE("hello", TOKEN_STRING("hello"));
     ASSERT_TOKEN_SEQUENCE("\"true\"", TOKEN_STRING("true"));
     ASSERT_TOKEN_SEQUENCE("\"hello\"", TOKEN_STRING("hello"));
     ASSERT_TOKEN_SEQUENCE("\"hello \\\"World\\\"!\"", TOKEN_STRING("hello \\\"World\\\"!"));
 }
 
-void test_literal_tokens() {
+static void test_literal_tokens() {
     ASSERT_TOKEN_SEQUENCE("true", TOKEN_TRUE);
     ASSERT_TOKEN_SEQUENCE("false", TOKEN_FALSE);
     ASSERT_TOKEN_SEQUENCE("null", TOKEN_NULL);
 }
 
-void test_complex_tokens() {
+static void test_complex_tokens() {
     ASSERT_TOKEN_SEQUENCE("[1,\"hello\"]",
         TOKEN_LBRACKET,
         TOKEN_NUMBER("1"),
