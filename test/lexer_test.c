@@ -85,6 +85,11 @@ static void test_string_tokens() {
     ASSERT_TOKEN_SEQUENCE("\"true\"", TOKEN_STRING("true"));
     ASSERT_TOKEN_SEQUENCE("\"hello\"", TOKEN_STRING("hello"));
     ASSERT_TOKEN_SEQUENCE("\"hello \\\"World\\\"!\"", TOKEN_STRING("hello \\\"World\\\"!"));
+    ASSERT_TOKEN_SEQUENCE("\"ä\"", TOKEN_STRING("ä"));
+    ASSERT_TOKEN_SEQUENCE("\"\\u00e4\"", TOKEN_STRING("\\u00e4"));
+    ASSERT_TOKEN_SEQUENCE("\"\\u00e4\\u00f6\\u00fc\"", TOKEN_STRING("\\u00e4\\u00f6\\u00fc"));
+    ASSERT_TOKEN_SEQUENCE("\"\\u00e4\\u00f6\\u00fc\\u00df\"", TOKEN_STRING("\\u00e4\\u00f6\\u00fc\\u00df"));
+    ASSERT_TOKEN_SEQUENCE("\"\\u00e4\\u00f6\\u00fc\\u00df\\u00e4\\u00f6\\u00fc\\u00df\"", TOKEN_STRING("\\u00e4\\u00f6\\u00fc\\u00df\\u00e4\\u00f6\\u00fc\\u00df"));
 }
 
 static void test_literal_tokens() {

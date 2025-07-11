@@ -4,6 +4,8 @@
 
 #include "error_handler.h"
 
+#include "utf8_util.h"
+
 size_t format_error(const Error * error, char * buffer, size_t buffer_len) {
     if (!error || !buffer || !buffer_len) return 0;
 
@@ -14,7 +16,7 @@ size_t format_error(const Error * error, char * buffer, size_t buffer_len) {
     if (written >= buffer_len) return buffer_len;
 
     if (error->token_length > 0) {
-        const size_t token_start_pos = error->token_start - error->input;
+        const size_t token_start_pos = utf8_str_n_len(error->input, error->token_start - error->input);
         for (size_t i = 0; i < token_start_pos && written < buffer_len; ++i) {
             buffer[written++] = ' ';
         }
