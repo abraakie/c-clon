@@ -5,6 +5,7 @@ add_library(error STATIC error.c)
 add_library(writer STATIC writer.c)
 add_library(json_writer STATIC json_writer.c)
 add_library(error_handler STATIC error_handler.c)
+add_library(utf8_util STATIC utf8_util.c)
 
 set(COMPONENT_LIBS
         ast
@@ -14,6 +15,7 @@ set(COMPONENT_LIBS
         writer
         json_writer
         error_handler
+        utf8_util
 )
 
 foreach(lib ${COMPONENT_LIBS})
@@ -28,6 +30,7 @@ endforeach()
 target_link_libraries(lexer
         PUBLIC
         error
+        utf8_util
 )
 
 target_link_libraries(parser
@@ -45,6 +48,7 @@ target_link_libraries(json_writer
 target_link_libraries(error_handler
         PUBLIC
         error
+        utf8_util
 )
 
 add_library(${PROJECT_NAME} STATIC clon.c)

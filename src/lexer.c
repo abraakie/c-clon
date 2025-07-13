@@ -6,12 +6,19 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "utf8_util.h"
+
 static char peek(const LxrContext *ctx) {
     return ctx->input[ctx->pos];
 }
 
 static char advance(LxrContext *ctx) {
     return ctx->input[++ctx->pos];
+}
+
+static char advance_n(LxrContext *ctx, size_t n) {
+    ctx->pos += n;
+    return ctx->input[ctx->pos];
 }
 
 int next_token(LxrContext *ctx, Token * token, Error * error) {
@@ -60,11 +67,19 @@ int next_token(LxrContext *ctx, Token * token, Error * error) {
     }
     if (c == '"' || c == '\'') {
         const char par = c;
-        char last;
+        int last_len = 1;
         do {
-            last = c;
-            c = advance(ctx);
-        } while (c && !(c == par && last != '\\'));
+            const char last = c;
+            c = advance_n(ctx, last_len);
+            const int len = utf8_char_validate(&ctx->input[ctx->pos]);
+            if (len == 0) {
+                make_syntax_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, &ctx->input[ctx->pos] - start, "Invalid UTF-8 character");
+                return ERROR;
+            }
+            if (len == 1 && c == par && !(last == '\\' && last_len == 1))
+                break;
+            last_len = len;
+        } while (c);
         if (c != par) {
             make_syntax_error(error, ctx->input, start, &ctx->input[ctx->pos] - start, &ctx->input[ctx->pos] - start, "Unterminated string");
             return ERROR;

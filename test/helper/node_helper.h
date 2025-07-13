@@ -5,7 +5,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "../../include/ast.h"
+#include "ast.h"
 
 #include "unity.h"
 
